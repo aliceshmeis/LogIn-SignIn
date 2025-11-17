@@ -1,0 +1,78 @@
+@import '../../styles/variables';
+
+// Card Base Styles
+.card {
+  background-color: $color-white;
+  border-radius: $radius-lg;
+  border: 1px solid $color-gray-200;
+  transition: all 0.3s ease-in-out;
+  
+  &:hover {
+    border-color: $color-gray-300;
+  }
+}
+
+// Variants
+.default {
+  background-color: $color-white;
+}
+
+.primary {
+  background: linear-gradient(135deg, #eff6ff 0%, $color-white 100%);
+  border-color: #bfdbfe;
+}
+
+.secondary {
+  background-color: $color-gray-50;
+}
+
+// Padding Sizes
+.padding-small {
+  padding: $spacing-md;
+}
+
+.padding-medium {
+  padding: $spacing-lg;
+}
+
+.padding-large {
+  padding: $spacing-xl;
+}
+
+// Shadow
+.shadow {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1),
+              0 2px 8px rgba(0, 0, 0, 0.06);
+  
+  &:hover {
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15),
+                0 4px 16px rgba(0, 0, 0, 0.08);
+  }
+}
+
+// Header Section
+.header {
+  margin-bottom: 20px;
+  padding-bottom: $spacing-md;
+  border-bottom: 1px solid $color-gray-200;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  color: $color-gray-800;
+  margin: 0 0 $spacing-sm 0;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $color-secondary;
+  margin: 0;
+  line-height: 1.5;
+}
+
+// Content Section
+.content {
+  color: $color-gray-600;
+  line-height: 1.6;
+}

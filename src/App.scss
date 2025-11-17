@@ -1,0 +1,39 @@
+@import './styles/variables';
+@import './styles/mixins';
+
+.app {
+  min-height: 100vh;
+  background: white;
+  padding: 40px 20px;
+  @include flex-center;
+}
+
+.container {
+  width: 100%;
+  max-width: 500px;
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: $color-gray-900;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 14px;
+  color: $color-gray-600;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}

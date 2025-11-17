@@ -1,0 +1,84 @@
+@import '../../styles/variables';
+
+// InputField Container
+.inputField {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+
+// Label
+.label {
+  font-size: 14px;
+  font-weight: 600;
+  color: $color-gray-800;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.required {
+  color: $color-danger;
+  font-size: 16px;
+}
+
+// Input Base Styles
+.input {
+  width: 100%;
+  padding: 12px $spacing-md;
+  font-size: 16px;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: $color-gray-800;
+  background-color: $color-white;
+  border: 2px solid $color-gray-200;
+  border-radius: $radius-md;
+  outline: none;
+  transition: all $transition-base;
+  
+  &::placeholder {
+    color: $color-gray-300;
+  }
+
+  &:focus {
+    border-color: $color-primary;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+  }
+
+  &:hover:not(.disabled):not(.error) {
+    border-color: $color-gray-300;
+  }
+}
+
+// Error State
+.error {
+  border-color: $color-danger;
+  
+  &:focus {
+    border-color: $color-danger;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+  }
+}
+
+.errorMessage {
+  font-size: 13px;
+  color: $color-danger;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  
+  &::before {
+    content: '⚠';
+  }
+}
+
+// Disabled State
+.disabled {
+  background-color: $color-gray-100;
+  color: $color-gray-300;
+  cursor: not-allowed;
+  
+  &:hover {
+    border-color: $color-gray-200;
+  }
+}
