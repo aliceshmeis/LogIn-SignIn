@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify';  // For notifications
-import axios from 'axios';  // For API calls
-import { loginSchema } from '../../validation/loginSchema';  // Validation rules
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify'; // For notifications
+import Button from '../../components/Buttons/Button';
 import Card from '../../components/Card/Card';
 import InputField from '../../components/InputField/InputField';
-import Button from '../../components/Buttons/Button';
+import { login } from '../../apis/authApi';
+import { loginSchema } from '../../validation/loginSchema'; // Validation rules
 import styles from './LoginPage.module.scss';
 
 const LoginPage = () => {
@@ -61,47 +61,58 @@ const LoginPage = () => {
 
   // This function runs when user clicks "Sign In" button
   const handleSubmit = async (e) => {
-    e.preventDefault();  // Prevent page reload
+  e.preventDefault();
 
-    // Step 1: Validate the form
-    const isValid = await validateForm();
-    if (!isValid) {
-      toast.error('Please fix the errors in the form');  // Show error notification
-      return;
-    }
+  // Validate form
+  const isValid = await validateForm();
+  if (!isValid) {
+    toast.error('Please fix the errors in the form');
+    return;
+  }
 
-    setIsLoading(true);  // Show loading state
+  setIsLoading(true);
 
-    try {
-      // Step 2: Make API call to login
-      // TODO: Replace with your real API endpoint
-      // const response = await axios.post('YOUR_API_URL/login', formData);
+  try {
+    // Call real backend API
+    const response = await login({
+      username: formData.username,
+      password: formData.password
+    });
+
+    // Check if login was successful
+    if (response.errorCode === 0 && response.data) {
+      // Save token and user info
+      localStorage.setItem('token', response.data.token);
+      localStorage.setItem('user', JSON.stringify(response.data.user));
       
-      // For now, simulate API call (remove this later)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log('Login data:', formData);
-      
-      // Step 3: Show success message
+      // Show success message
       toast.success('Sign in successful! 🎉');
       
-      // Step 4: Wait a moment, then redirect to dashboard
+      // Redirect based on role
       setTimeout(() => {
-        navigate('/dashboard');
+        if (response.data.user.isAdmin) {
+          navigate('/admin'); // Admin page
+        } else {
+          navigate('/user'); // User page
+        }
       }, 1500);
-      
-    } catch (error) {
-      // If API call fails, show error message
-      const errorMessage = error.response?.data?.message || 'Invalid username or password';
-      toast.error(errorMessage);
-      
-      setErrors({
-        submit: errorMessage
-      });
-    } finally {
-      setIsLoading(false);  // Hide loading state
+    } else {
+      // Login failed
+      toast.error(response.message || 'Invalid username or password');
     }
-  };
+    
+  } catch (error) {
+    // Handle error
+    const errorMessage = error.response?.data?.message || 'Invalid username or password';
+    toast.error(errorMessage);
+    
+    setErrors({
+      submit: errorMessage
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className={styles.loginPage}>
@@ -172,10 +183,7 @@ const LoginPage = () => {
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
-          </form>
-
-          {/* Sign Up Link */}
-          <div className={styles.footer}>
+            <div className={styles.footer}>
             <p className={styles.footerText}>
               Don't have an account?{' '}
               <Link to="/signup" className={styles.link}>
@@ -183,6 +191,10 @@ const LoginPage = () => {
               </Link>
             </p>
           </div>
+          </form>
+
+          {/* Sign Up Link */}
+          
         </Card>
       </div>
     </div>

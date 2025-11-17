@@ -2,7 +2,7 @@
 import * as Yup from 'yup';
 
 // Validation rules for login form
-export const loginSchema = Yup.object({ //the form data should be opject with specific feilds
+export const loginSchema = Yup.object({ //the form data should be object with specific feilds
   // Username rules
   username: Yup.string()
     .required('Username is required')           // Must not be empty

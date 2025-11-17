@@ -7,6 +7,7 @@ import Card from '../../components/Card/Card';
 import InputField from '../../components/InputField/InputField';
 import Button from '../../components/Buttons/Button';
 import styles from './SignUpPage.module.scss';
+import { signup } from '../../apis/authApi';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
@@ -60,45 +61,51 @@ const SignUpPage = () => {
 
   // Handle form submission
   const handleSubmit = async (e) => {
-    e.preventDefault();
+  e.preventDefault();
 
-    // Validate form
-    const isValid = await validateForm();
-    if (!isValid) {
-      toast.error('Please fix the errors in the form');
-      return;
-    }
+  // Validate form
+  const isValid = await validateForm();
+  if (!isValid) {
+    toast.error('Please fix the errors in the form');
+    return;
+  }
 
-    setIsLoading(true);
+  setIsLoading(true);
 
-    try {
-      // TODO: Replace with actual API call
-      // const response = await axios.post('YOUR_API_URL/signup', formData);
-      
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      console.log('Signup data:', formData);
-      
+  try {
+    // Call real backend API
+    const response = await signup(formData);
+    
+    // Check if signup was successful
+    if (response.errorCode === 0) {
       // Show success message
       toast.success('Account created successfully! 🎉');
       
-      // Redirect to login after a moment
+      // Redirect to login
       setTimeout(() => {
         navigate('/login');
       }, 1500);
-      
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again.';
-      toast.error(errorMessage);
-      
-      setErrors({
-        submit: errorMessage
-      });
-    } finally {
-      setIsLoading(false);
+    } else if (response.errorCode === 409) {
+      // User already exists
+      toast.error('Username or email already exists');
+      setErrors({ submit: 'Username or email already exists' });
+    } else {
+      // Other error
+      toast.error(response.message || 'Something went wrong');
+      setErrors({ submit: response.message || 'Something went wrong' });
     }
-  };
+    
+  } catch (error) {
+    const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again.';
+    toast.error(errorMessage);
+    
+    setErrors({
+      submit: errorMessage
+    });
+  } finally {
+    setIsLoading(false);
+  }
+};
 
   return (
     <div className={styles.signUpPage}>
