@@ -1,115 +1,68 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { useForm } from 'react-hook-form'; // NEW
+import { yupResolver } from '@hookform/resolvers/yup'; // NEW
 import { toast, ToastContainer } from 'react-toastify';
-import axios from 'axios';
-import { signupSchema } from '../../validation/signupSchema';
 import Card from '../../components/Card/Card';
 import InputField from '../../components/InputField/InputField';
 import Button from '../../components/Buttons/Button';
-import styles from './SignUpPage.module.scss';
 import { signup } from '../../apis/authApi';
+import { signupSchema } from '../../validation/signupSchema';
+import styles from './SignUpPage.module.scss';
 
 const SignUpPage = () => {
   const navigate = useNavigate();
-  
-  // Form data state
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
-  });
-  
-  // Errors state
-  const [errors, setErrors] = useState({});
-  
-  // Loading state
   const [isLoading, setIsLoading] = useState(false);
 
-  // Handle input changes
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({
-        ...prev,
-        [name]: ''
-      }));
-    }
-  };
-
-  // Validate form using Yup
-  const validateForm = async () => {
-    try {
-      await signupSchema.validate(formData, { abortEarly: false });
-      return true;
-    } catch (err) {
-      const validationErrors = {};
-      err.inner.forEach((error) => {
-        validationErrors[error.path] = error.message;
-      });
-      setErrors(validationErrors);
-      return false;
-    }
-  };
+  // Setup React Hook Form with Yup validation
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(signupSchema),
+    mode: 'onChange' // Show errors as user types
+  });
 
   // Handle form submission
-  const handleSubmit = async (e) => {
-  e.preventDefault();
+  const onSubmit = async (data) => {
+    // Trim spaces from all inputs
+    const trimmedData = {
+      username: data.username.trim(),
+      email: data.email.trim(),
+      password: data.password.trim(),
+      confirmPassword: data.confirmPassword.trim()
+    };
 
-  // Validate form
-  const isValid = await validateForm();
-  if (!isValid) {
-    toast.error('Please fix the errors in the form');
-    return;
-  }
+    setIsLoading(true);
 
-  setIsLoading(true);
-
-  try {
-    // Call real backend API
-    const response = await signup(formData);
-    
-    // Check if signup was successful
-    if (response.errorCode === 0) {
-      // Show success message
-      toast.success('Account created successfully! 🎉');
+    try {
+      // Call backend API
+      const response = await signup(trimmedData);
       
-      // Redirect to login
-      setTimeout(() => {
-        navigate('/login');
-      }, 1500);
-    } else if (response.errorCode === 409) {
-      // User already exists
-      toast.error('Username or email already exists');
-      setErrors({ submit: 'Username or email already exists' });
-    } else {
-      // Other error
-      toast.error(response.message || 'Something went wrong');
-      setErrors({ submit: response.message || 'Something went wrong' });
+      // Check if signup was successful
+      if (response.errorCode === 0) {
+        toast.success('Account created successfully! 🎉');
+        
+        setTimeout(() => {
+          navigate('/login');
+        }, 1500);
+      } else if (response.errorCode === 409) {
+        toast.error('Username or email already exists');
+      } else {
+        toast.error(response.message || 'Something went wrong');
+      }
+      
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again.';
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
-    
-  } catch (error) {
-    const errorMessage = error.response?.data?.message || 'Something went wrong. Please try again.';
-    toast.error(errorMessage);
-    
-    setErrors({
-      submit: errorMessage
-    });
-  } finally {
-    setIsLoading(false);
-  }
-};
+  };
 
   return (
     <div className={styles.signUpPage}>
-      {/* Toast notifications */}
       <ToastContainer 
         position="top-right"
         autoClose={3000}
@@ -127,16 +80,15 @@ const SignUpPage = () => {
         </div>
 
         <Card variant="primary" padding="large" shadow>
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             {/* Username Input */}
             <InputField
               label="Username"
               type="text"
               name="username"
               placeholder="Choose a username"
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
+              {...register('username')} // Register with React Hook Form
+              error={errors.username?.message} // Show error from Yup
               required
             />
 
@@ -146,9 +98,8 @@ const SignUpPage = () => {
               type="email"
               name="email"
               placeholder="your.email@example.com"
-              value={formData.email}
-              onChange={handleChange}
-              error={errors.email}
+              {...register('email')} // Register with React Hook Form
+              error={errors.email?.message} // Show error
               required
             />
 
@@ -158,9 +109,8 @@ const SignUpPage = () => {
               type="password"
               name="password"
               placeholder="Create a strong password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
+              {...register('password')} // Register with React Hook Form
+              error={errors.password?.message} // Show error
               required
             />
 
@@ -170,18 +120,10 @@ const SignUpPage = () => {
               type="password"
               name="confirmPassword"
               placeholder="Confirm your password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              error={errors.confirmPassword}
+              {...register('confirmPassword')} // Register with React Hook Form
+              error={errors.confirmPassword?.message} // Show error
               required
             />
-
-            {/* Submit Error */}
-            {errors.submit && (
-              <div className={styles.errorBox}>
-                {errors.submit}
-              </div>
-            )}
 
             {/* Submit Button */}
             <Button

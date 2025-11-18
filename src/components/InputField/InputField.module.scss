@@ -1,18 +1,16 @@
 @import '../../styles/variables';
 
-// InputField Container
 .inputField {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   width: 100%;
 }
 
-// Label
 .label {
   font-size: 14px;
-  font-weight: 600;
-  color: $color-gray-800;
+  font-weight: 500;
+  color: $color-gray-700;  // Now this exists!
   display: flex;
   align-items: center;
   gap: 4px;
@@ -20,65 +18,140 @@
 
 .required {
   color: $color-danger;
-  font-size: 16px;
+  font-weight: 600;
 }
 
-// Input Base Styles
+.inputWrapper {
+  position: relative;
+  width: 100%;
+}
+
 .input {
   width: 100%;
-  padding: 12px $spacing-md;
-  font-size: 16px;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  color: $color-gray-800;
-  background-color: $color-white;
-  border: 2px solid $color-gray-200;
+  padding: 12px 16px;
+  font-size: 15px;
+  border: 2px solid $color-gray-300;
   border-radius: $radius-md;
-  outline: none;
+  background-color: $color-white;
+  color: $color-gray-900;
   transition: all $transition-base;
-  
+  font-family: inherit;
+
   &::placeholder {
-    color: $color-gray-300;
+    color: $color-gray-400;
   }
 
   &:focus {
+    outline: none;
     border-color: $color-primary;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    box-shadow: 0 0 0 3px rgba($color-primary, 0.1);
   }
 
-  &:hover:not(.disabled):not(.error) {
-    border-color: $color-gray-300;
+  &:disabled {
+    background-color: $color-gray-100;
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }
 
-// Error State
-.error {
-  border-color: $color-danger;
+// Add padding for password fields with eye icon
+.input[type="password"],
+.input[type="text"] {
+  &:not(:only-child) {
+    padding-right: 48px;
+  }
+}
+
+.inputError {
+  border-color: $color-danger !important;
   
   &:focus {
-    border-color: $color-danger;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+    box-shadow: 0 0 0 3px rgba($color-danger, 0.1) !important;
   }
+}
+
+.eyeButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-gray-500;
+  transition: color $transition-base;
+  z-index: 1;
+  
+  &:hover {
+    color: $color-primary;
+  }
+  
+  &:focus {
+    outline: none;
+    color: $color-primary;
+  }
+  
+  &:active {
+    transform: translateY(-50%) scale(0.95);
+  }
+}
+
+.eyeIcon {
+  width: 20px;
+  height: 20px;
+  pointer-events: none;
 }
 
 .errorMessage {
   font-size: 13px;
   color: $color-danger;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 4px;
+  white-space: pre-line;
+  line-height: 1.4;
   
   &::before {
     content: '⚠';
+    flex-shrink: 0;
+    margin-top: 1px;
   }
 }
 
-// Disabled State
-.disabled {
-  background-color: $color-gray-100;
-  color: $color-gray-300;
-  cursor: not-allowed;
+// Mobile responsive
+@media (max-width: 640px) {
+  .input {
+    font-size: 16px;
+    padding: 10px 14px;
+  }
   
-  &:hover {
-    border-color: $color-gray-200;
+  .input[type="password"],
+  .input[type="text"] {
+    &:not(:only-child) {
+      padding-right: 44px;
+    }
+  }
+
+  .eyeButton {
+    right: 10px;
+  }
+
+  .eyeIcon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .errorMessage {
+    font-size: 12px;
+  }
+}
+
+.inputField:focus-within {
+  .label {
+    color: $color-primary;
   }
 }

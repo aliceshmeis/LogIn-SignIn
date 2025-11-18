@@ -1,25 +1,19 @@
-import React, { forwardRef } from 'react';
+import React, { useState, forwardRef } from 'react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
 import styles from './InputField.module.scss';
 
 const InputField = forwardRef(({ 
-  label,
-  type = 'text',
-  name,
-  placeholder,
-  value,
-  onChange,
-  error,
+  label, 
+  type = 'text', 
+  name, 
+  placeholder, 
+  error, 
   required = false,
-  disabled = false,
-  className = '',
-  ...props 
+  ...rest
 }, ref) => {
-  const inputClass = `
-    ${styles.input} 
-    ${error ? styles.error : ''} 
-    ${disabled ? styles.disabled : ''}
-    ${className}
-  `.trim();
+  const [showPassword, setShowPassword] = useState(false);
+  const isPassword = type === 'password';
+  const inputType = isPassword && showPassword ? 'text' : type;
 
   return (
     <div className={styles.inputField}>
@@ -30,23 +24,29 @@ const InputField = forwardRef(({
         </label>
       )}
       
-      <input
-        ref={ref}
-        id={name}
-        type={type}
-        name={name}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-        required={required}
-        className={inputClass}
-        {...props}
-      />
+      <div className={styles.inputWrapper}>
+        <input
+          ref={ref}
+          id={name}
+          name={name}
+          type={inputType}
+          placeholder={placeholder}
+          className={`${styles.input} ${error ? styles.inputError : ''}`}
+          {...rest}
+        />
+        
+        {isPassword && (
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className={styles.eyeButton}
+          >
+            {showPassword ? <FiEyeOff /> : <FiEye />}
+          </button>
+        )}
+      </div>
       
-      {error && (
-        <span className={styles.errorMessage}>{error}</span>
-      )}
+      {error && <span className={styles.errorMessage}>{error}</span>}
     </div>
   );
 });

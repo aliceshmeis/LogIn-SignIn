@@ -1,24 +1,4 @@
-import axios from 'axios';
-
-// Your backend URL
-const API_URL = 'https://localhost:5001/api'; 
-
-// Create axios instance
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',//it always sends jason data
-  },
-});
-
-// Add token to requests automatically
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-});
+import api from './axiosInstance'; // Import the axios instance
 
 // Login
 export const login = async (credentials) => {

@@ -1,122 +1,74 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast, ToastContainer } from 'react-toastify'; // For notifications
+import { useForm } from 'react-hook-form'; // NEW
+import { yupResolver } from '@hookform/resolvers/yup'; // NEW
+import { toast, ToastContainer } from 'react-toastify';
 import Button from '../../components/Buttons/Button';
 import Card from '../../components/Card/Card';
 import InputField from '../../components/InputField/InputField';
 import { login } from '../../apis/authApi';
-import { loginSchema } from '../../validation/loginSchema'; // Validation rules
+import { loginSchema } from '../../validation/loginSchema';
 import styles from './LoginPage.module.scss';
 
 const LoginPage = () => {
   const navigate = useNavigate();
-  
-  // Form data state (stores username and password)
-  const [formData, setFormData] = useState({
-    username: '',
-    password: ''
-  });
-  
-  // Errors state (stores validation error messages)
-  const [errors, setErrors] = useState({});
-  
-  // Loading state (shows when form is submitting)
   const [isLoading, setIsLoading] = useState(false);
 
-  // This function runs when user types in input fields
-  const handleChange = (e) => {
-    const { name, value } = e.target;  // Get field name and value
-    
-    // Update form data
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-    
-    // Clear error for this field when user starts typing
-    if (errors[name]) {
-      setErrors(prev => ({//update the erros sate and takes the previous error objects
-        ...prev,//Copies all existing fields in formData.
-        [name]: ''//Sets the error for this field to an empty string, effectively clearing it.
-      }));
-    }
-  };
+  // Setup React Hook Form with Yup validation
+  const {
+    register,//connects input to the form
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    resolver: yupResolver(loginSchema),//tell my form to use yup schema everytime i submit
+    mode: 'onChange' // Show errors as user types//validates while typing
+  });
 
-  // This function validates the form using Yup
-  const validateForm = async () => {
+  // Handle form submission
+  const onSubmit = async (data) => {
+    // Trim spaces from inputs
+    const trimmedData = {
+      username: data.username.trim(),
+      password: data.password.trim()
+    };
+
+    setIsLoading(true);
+
     try {
-      // Check if form data matches our validation rules
-      await loginSchema.validate(formData, { abortEarly: false });
-      return true;  // Validation passed!
-    } catch (err) {
-      // Validation failed, collect all errors
-      const validationErrors = {};
-      err.inner.forEach((error) => {//This turns the array into a nice object like:
-        validationErrors[error.path] = error.message;
-      });
-      setErrors(validationErrors);
-      return false;  // Validation failed
+      // Call backend API
+      const response = await login(trimmedData);
+
+      // Check if login was successful
+      if (response.errorCode === 0 && response.data) {
+        // Save token and user info
+        localStorage.setItem('token', response.data.token);
+        localStorage.setItem('user', JSON.stringify(response.data.user));
+        
+        // Show success message
+        toast.success('Sign in successful! 🎉');
+        
+        // Redirect based on role
+        setTimeout(() => {
+          if (response.data.user.isAdmin) {
+            navigate('/admin');
+          } else {
+            navigate('/user');
+          }
+        }, 1500);
+      } else {
+        toast.error(response.message || 'Invalid username or password');
+      }
+      
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || 'Invalid username or password';
+      toast.error(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  // This function runs when user clicks "Sign In" button
-  const handleSubmit = async (e) => {
-  e.preventDefault();
-
-  // Validate form
-  const isValid = await validateForm();
-  if (!isValid) {
-    toast.error('Please fix the errors in the form');
-    return;
-  }
-
-  setIsLoading(true);
-
-  try {
-    // Call real backend API
-    const response = await login({
-      username: formData.username,
-      password: formData.password
-    });
-
-    // Check if login was successful
-    if (response.errorCode === 0 && response.data) {
-      // Save token and user info
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('user', JSON.stringify(response.data.user));
-      
-      // Show success message
-      toast.success('Sign in successful! 🎉');
-      
-      // Redirect based on role
-      setTimeout(() => {
-        if (response.data.user.isAdmin) {
-          navigate('/admin'); // Admin page
-        } else {
-          navigate('/user'); // User page
-        }
-      }, 1500);
-    } else {
-      // Login failed
-      toast.error(response.message || 'Invalid username or password');
-    }
-    
-  } catch (error) {
-    // Handle error
-    const errorMessage = error.response?.data?.message || 'Invalid username or password';
-    toast.error(errorMessage);
-    
-    setErrors({
-      submit: errorMessage
-    });
-  } finally {
-    setIsLoading(false);
-  }
-};
 
   return (
     <div className={styles.loginPage}>
-      {/* Toast notification container */}
       <ToastContainer 
         position="top-right"
         autoClose={3000}
@@ -134,16 +86,15 @@ const LoginPage = () => {
         </div>
 
         <Card variant="primary" padding="large" shadow>
-          <form onSubmit={handleSubmit} className={styles.form}>
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
             {/* Username Input */}
             <InputField
               label="Username"
               type="text"
               name="username"
               placeholder="Enter your username"
-              value={formData.username}
-              onChange={handleChange}
-              error={errors.username}
+              {...register('username')} // Register input with React Hook Form
+              error={errors.username?.message} // Show error from Yup
               required
             />
 
@@ -153,9 +104,8 @@ const LoginPage = () => {
               type="password"
               name="password"
               placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              error={errors.password}
+              {...register('password')} // Register input
+              error={errors.password?.message} // Show error
               required
             />
 
@@ -165,13 +115,6 @@ const LoginPage = () => {
                 Forgot Password?
               </Link>
             </div>
-
-            {/* Submit Error (if API fails) */}
-            {errors.submit && (
-              <div className={styles.errorBox}>
-                {errors.submit}
-              </div>
-            )}
 
             {/* Submit Button */}
             <Button
@@ -183,18 +126,16 @@ const LoginPage = () => {
             >
               {isLoading ? 'Signing In...' : 'Sign In'}
             </Button>
-            <div className={styles.footer}>
-            <p className={styles.footerText}>
-              Don't have an account?{' '}
-              <Link to="/signup" className={styles.link}>
-                Sign Up
-              </Link>
-            </p>
-          </div>
-          </form>
 
-          {/* Sign Up Link */}
-          
+            <div className={styles.footer}>
+              <p className={styles.footerText}>
+                Don't have an account?{' '}
+                <Link to="/signup" className={styles.link}>
+                  Sign Up
+                </Link>
+              </p>
+            </div>
+          </form>
         </Card>
       </div>
     </div>
