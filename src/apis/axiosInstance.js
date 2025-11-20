@@ -1,13 +1,13 @@
 import axios from 'axios';
 
-// Your backend URL
-const API_URL = 'https://localhost:5001/api';
+// API Gateway URL (port 5000) - Ocelot Gateway
+const API_GATEWAY_URL = 'https://localhost:5000';
 
 // Create axios instance
 const api = axios.create({
-  baseURL: API_URL,
+  baseURL: API_GATEWAY_URL,
   headers: {
-    'Content-Type': 'application/json', // Always sends JSON data
+    'Content-Type': 'application/json',
   },
 });
 
@@ -25,7 +25,7 @@ api.interceptors.request.use(
   }
 );
 
-// Optional: Handle response errors globally (auto-logout on 401)
+// Handle response errors globally (auto-logout on 401)
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -36,6 +36,7 @@ api.interceptors.response.use(
       // Remove invalid token
       localStorage.removeItem('token');
       localStorage.removeItem('user');
+      localStorage.removeItem('cart');
       
       // Redirect to login (only if not already on login page)
       if (window.location.pathname !== '/login') {

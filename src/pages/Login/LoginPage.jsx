@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form'; // NEW
-import { yupResolver } from '@hookform/resolvers/yup'; // NEW
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { toast, ToastContainer } from 'react-toastify';
 import Button from '../../components/Buttons/Button';
 import Card from '../../components/Card/Card';
@@ -10,36 +10,31 @@ import { login } from '../../apis/authApi';
 import styles from './LoginPage.module.scss';
 import * as Yup from 'yup';
 
-// Validation rules for login form
-export const loginSchema = Yup.object({ //the form data should be object with specific feilds
-  // Username rules
+// Validation schema
+export const loginSchema = Yup.object({
   username: Yup.string()
-    .required('Username is required')           // Must not be empty
-    .min(3, 'Username must be at least 3 characters'),  // Minimum length
+    .required('Username is required')
+    .min(3, 'Username must be at least 3 characters'),
   
-  // Password rules
   password: Yup.string()
-    .required('Password is required')           // Must not be empty
-    .min(6, 'Password must be at least 6 characters'),  // Minimum length
+    .required('Password is required')
+    .min(6, 'Password must be at least 6 characters'),
 });
 
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Setup React Hook Form with Yup validation
   const {
-    register,//connects input to the form
+    register,
     handleSubmit,
     formState: { errors }
   } = useForm({
-    resolver: yupResolver(loginSchema),//tell my form to use yup schema everytime i submit
-    mode: 'onChange' // Show errors as user types//validates while typing
+    resolver: yupResolver(loginSchema),
+    mode: 'onChange'
   });
 
-  // Handle form submission
   const onSubmit = async (data) => {
-    // Trim spaces from inputs
     const trimmedData = {
       username: data.username.trim(),
       password: data.password.trim()
@@ -48,19 +43,18 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      // Call backend API
       const response = await login(trimmedData);
 
-      // Check if login was successful
       if (response.errorCode === 0 && response.data) {
-        // Save token and user info
+        // Store ONLY the token
         localStorage.setItem('token', response.data.token);
+        
+        // Store user info for UI display (username, isAdmin)
+        // Backend will get userId from JWT token automatically
         localStorage.setItem('user', JSON.stringify(response.data.user));
         
-        // Show success message
         toast.success('Sign in successful! 🎉');
         
-        // Redirect based on role
         setTimeout(() => {
           if (response.data.user.isAdmin) {
             navigate('/admin');
@@ -100,36 +94,32 @@ const LoginPage = () => {
 
         <Card variant="primary" padding="large" shadow>
           <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
-            {/* Username Input */}
             <InputField
               label="Username"
               type="text"
               name="username"
               placeholder="Enter your username"
-              {...register('username')} // Register input with React Hook Form
-              error={errors.username?.message} // Show error from Yup
+              {...register('username')}
+              error={errors.username?.message}
               required
             />
 
-            {/* Password Input */}
             <InputField
               label="Password"
               type="password"
               name="password"
               placeholder="Enter your password"
-              {...register('password')} // Register input
-              error={errors.password?.message} // Show error
+              {...register('password')}
+              error={errors.password?.message}
               required
             />
 
-            {/* Forgot Password Link */}
             <div className={styles.forgotPassword}>
               <Link to="/forgot-password" className={styles.forgotLink}>
                 Forgot Password?
               </Link>
             </div>
 
-            {/* Submit Button */}
             <Button
               type="submit"
               variant="primary"
