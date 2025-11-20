@@ -1,4 +1,4 @@
-@import '../../styles/variables';
+@import '../../styles/theme';
 
 // Navbar - Keep white background
 .navbar {
@@ -6,43 +6,37 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 40px;
-  background-color: $color-white; // ← White background stays
+  background-color: $theme-white;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;
   z-index: 1000;
 }
 
-// Logo - Dark navy text (matching footer)
+// Logo - Navy text
 .logo {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 20px;
   font-weight: 700;
-  
-  span {
-    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); // ← Dark navy gradient
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
+  color: $theme-navy;
 }
 
-// Links - Keep gray
+// Links
 .links {
   display: flex;
   gap: 32px;
   
   a {
     text-decoration: none;
-    color: $color-gray-600;
+    color: $theme-gray-600;
     font-size: 15px;
     font-weight: 500;
-    transition: all $transition-base;
+    transition: all $theme-transition-base;
     
     &:hover {
-      color: $color-primary;
+      color: $theme-primary;
     }
   }
 }
@@ -60,51 +54,26 @@
   padding: 6px 12px;
   border-radius: 20px;
   cursor: pointer;
-  transition: background-color $transition-base;
-  
-  &:hover {
-    background-color: $color-gray-100;
-  }
-}
-
-// Avatar Circle - Dark navy gradient (matching footer)
-// Avatar Circle - Solid dark navy
-.avatarCircle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background-color: #0f172a;  // ← Navy background
-  color: #ffffff;              // ← White text
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  transition: background-color $theme-transition-base;
+  background-color: $theme-navy;
+  color: $theme-white;
   font-weight: 600;
   font-size: 14px;
-}
-.userName {
-  font-size: 14px;
-  font-weight: 500;
-  color: $color-gray-900;
-}
-
-.chevron {
-  color: $color-gray-500;
-  transition: transform $transition-base;
   
-  &.chevronUp {
-    transform: rotate(180deg);
+  &:hover {
+    background-color: $theme-navy-medium;
   }
 }
 
-// Dropdown Menu - Keep white background
+// Dropdown Menu
 .dropdown {
   position: absolute;
   top: calc(100% + 12px);
   right: 0;
-  background-color: $color-white; // ← White background
+  background-color: $theme-white;
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  min-width: 280px;
+  min-width: 180px;
   overflow: hidden;
   animation: slideDown 0.2s ease;
 }
@@ -120,92 +89,22 @@
   }
 }
 
-// User Info Section
-.userInfo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px;
-  background: linear-gradient(135deg, rgba(30, 41, 59, 0.05) 0%, rgba(15, 23, 42, 0.05) 100%);
-  border-bottom: 1px solid $color-gray-200;
-}
-
-// Avatar Large - Dark navy gradient
-.avatarLarge {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background-color: #0f172a;  // ← Navy background
-  color: #ffffff;              // ← White text
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 20px;
-  flex-shrink: 0;
-}
-
-.userDetails {
-  flex: 1;
-  min-width: 0;
-}
-
-.fullName {
-  font-weight: 600;
-  font-size: 15px;
-  color: $color-gray-900;
-  margin-bottom: 2px;
-}
-
-.email {
-  font-size: 13px;
-  color: $color-gray-600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-// Divider
-.divider {
-  height: 1px;
-  background-color: $color-gray-200;
-  margin: 4px 0;
-}
-
-// Menu Items
-.menuItem {
-  display: flex;
-  align-items: center;
-  gap: 12px;
+.userName {
   padding: 12px 16px;
+  font-weight: 600;
+  color: $theme-gray-900;
+  border-bottom: 1px solid $theme-gray-200;
+}
+
+.logoutButton {
+  padding: 12px 16px;
+  color: $theme-danger;
+  font-weight: 500;
   cursor: pointer;
-  transition: background-color $transition-base;
-  color: $color-gray-700;
-  font-size: 14px;
-  
-  svg {
-    color: $color-gray-500;
-    flex-shrink: 0;
-  }
+  transition: background-color $theme-transition-base;
   
   &:hover {
-    background-color: $color-gray-50;
-    
-    svg {
-      color: $color-primary;
-    }
-  }
-  
-  &.logout {
-    color: $color-danger;
-    
-    svg {
-      color: $color-danger;
-    }
-    
-    &:hover {
-      background-color: rgba($color-danger, 0.05);
-    }
+    background-color: $theme-gray-50;
   }
 }
 
@@ -217,14 +116,5 @@
   
   .links {
     display: none;
-  }
-  
-  .userName {
-    display: none;
-  }
-  
-  .dropdown {
-    min-width: 260px;
-    right: -16px;
   }
 }

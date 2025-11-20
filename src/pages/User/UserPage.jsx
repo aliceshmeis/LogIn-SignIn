@@ -20,9 +20,8 @@ const UserPage = () => {
       <div className={styles.container}>
         <h1 className={styles.title}>User Dashboard</h1>
         <p className={styles.welcome}>Welcome, {user?.username}!</p>
-        <p className={styles.subtitle}>You are logged in as a regular user</p>
         
-        <Button onClick={handleLogout} variant="danger" size="medium">
+        <Button onClick={handleLogout} >
           Logout
         </Button>
       </div>

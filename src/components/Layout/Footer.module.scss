@@ -1,8 +1,8 @@
-@import '../../styles/variables';
+@import '../../styles/theme';
 
 .footer {
-  background: linear-gradient(135deg, #243b1e 0%, #0f172a 100%);
-  color: $color-white;
+  background: $theme-gradient-navy;
+  color: $theme-white;
   margin-top: auto;
   padding: 48px 32px 24px;
 }
@@ -37,7 +37,7 @@
   .logoText {
     font-size: 24px;
     font-weight: 700;
-    color: $color-white;
+    color: $theme-white;
   }
 
   .tagline {
@@ -63,11 +63,11 @@
   align-items: center;
   justify-content: center;
   color: rgba(255, 255, 255, 0.7);
-  transition: all $transition-base;
+  transition: all $theme-transition-base;
   
   &:hover {
-    background-color: $color-primary;
-    color: $color-white;
+    background-color: $theme-primary;
+    color: $theme-white;
     transform: translateY(-3px);
   }
 }
@@ -82,7 +82,7 @@
 .linksTitle {
   font-size: 16px;
   font-weight: 600;
-  color: $color-white;
+  color: $theme-white;
   margin-bottom: 4px;
 }
 
@@ -90,10 +90,10 @@
   color: rgba(255, 255, 255, 0.7);
   text-decoration: none;
   font-size: 14px;
-  transition: all $transition-base;
+  transition: all $theme-transition-base;
   
   &:hover {
-    color: $color-primary;
+    color: $theme-primary;
     padding-left: 4px;
   }
 }

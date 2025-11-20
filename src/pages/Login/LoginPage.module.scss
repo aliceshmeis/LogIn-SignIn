@@ -10,7 +10,7 @@
   background-image: 
     radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.05) 0%, transparent 50%),
     radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.05) 0%, transparent 50%);
-  padding: 20px;
+  padding: 40px 20px;
   width: 100%;
   box-sizing: border-box;
 }
@@ -24,32 +24,34 @@
 // Header
 .header {
   text-align: center;
-  margin-bottom: 32px;
+  margin-bottom: 40px;
 }
 
 .title {
   font-size: 32px;
   font-weight: 700;
   color: $color-gray-900;
-  margin: 0 0 12px 0;
+  margin: 0 0 16px 0;
 }
 
 .subtitle {
   font-size: 16px;
   color: $color-gray-600;
   margin: 0;
+  line-height: 1.6;
 }
 
 // Form
 .form {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 }
 
 .forgotPassword {
   text-align: right;
   margin-top: -8px;
+  margin-bottom: 8px;
 }
 
 .forgotLink {
@@ -67,7 +69,7 @@
 
 .submitButton {
   width: 100%;
-  margin-top: 8px;
+  margin-top: 12px;
 }
 
 // Error Box
@@ -90,15 +92,17 @@
 
 // Footer
 .footer {
-  padding-top: 24px;
+  padding-top: 32px;
   border-top: 1px solid $color-gray-200;
   text-align: center;
+  margin-top: 8px;
 }
 
 .footerText {
   font-size: 14px;
   color: $color-gray-600;
   margin: 0;
+  line-height: 1.6;
 }
 
 .link {
@@ -125,5 +129,9 @@
 
   .subtitle {
     font-size: 14px;
+  }
+  
+  .form {
+    gap: 20px;
   }
 }

@@ -1,33 +1,36 @@
-// Colors - Professional Theme
-$color-primary: #3b82f6;        // Professional Blue
-$color-primary-dark: #2563eb;   // Darker Blue
-$color-secondary: #64748b;      // Slate Gray
-$color-success: #10b981;        // Green
-$color-danger: #ef4444;         // Red
-$color-white: #ffffff;          // White
 
-// Gray Scale 
-$color-gray-50: #f8fafc;        // Very Light Gray
-$color-gray-100: #f1f5f9;       // Light Gray
-$color-gray-200: #e2e8f0;       // Border Gray
-$color-gray-300: #cbd5e1;       // Placeholder Gray
-$color-gray-400: #94a3b8;       // NEW - Medium Light Gray
-$color-gray-500: #64748b;       // NEW - Medium Gray
-$color-gray-600: #475569;       // Text Gray
-$color-gray-700: #334155;       // NEW - Dark Gray (THIS WAS MISSING!)
-$color-gray-800: #1e293b;       // Dark Text
-$color-gray-900: #0f172a;       // Very Dark
+@import './theme';
+
+
+$color-primary: $theme-primary;
+$color-primary-dark: $theme-primary-dark;
+$color-secondary: $theme-gray-600;
+
+$color-white: $theme-white;
+$color-success: $theme-success;
+$color-danger: $theme-danger;
+
+$color-gray-50: $theme-gray-50;
+$color-gray-100: $theme-gray-100;
+$color-gray-200: $theme-gray-200;
+$color-gray-300: $theme-gray-300;
+$color-gray-400: $theme-gray-400;
+$color-gray-500: $theme-gray-500;
+$color-gray-600: $theme-gray-600;
+$color-gray-700: $theme-gray-700;
+$color-gray-800: $theme-gray-800;
+$color-gray-900: $theme-gray-900;
 
 // Spacing
-$spacing-sm: 8px;
-$spacing-md: 16px;
-$spacing-lg: 24px;
-$spacing-xl: 32px;
+$spacing-sm: $theme-spacing-sm;
+$spacing-md: $theme-spacing-md;
+$spacing-lg: $theme-spacing-lg;
+$spacing-xl: $theme-spacing-xl;
 
 // Border Radius
-$radius-md: 8px;
-$radius-lg: 12px;
-$radius-xl: 16px;
+$radius-md: $theme-radius-md;
+$radius-lg: $theme-radius-lg;
+$radius-xl: $theme-radius-xl;
 
 // Transitions
-$transition-base: 0.2s ease-in-out;
+$transition-base: $theme-transition-base;
