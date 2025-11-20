@@ -6,6 +6,7 @@ import AdminPage from './pages/Admin/AdminPage';
 import UserPage from './pages/User/UserPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import './styles/globals.scss';
+import Layout from './components/Layout/Layout'; // Import Layout
 
 function App() {
   return (
@@ -31,7 +32,9 @@ function App() {
           path="/user" 
           element={
             <ProtectedRoute>
+              
               <UserPage />
+            
             </ProtectedRoute>
           } 
         />

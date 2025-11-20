@@ -1,0 +1,25 @@
+@import '../../styles/variables';
+
+// Main layout container
+.layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: $color-gray-50;
+}
+
+// Content area (below navbar)
+.content {
+  flex: 1;
+  padding: 32px;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+// Mobile responsive
+@media (max-width: 768px) {
+  .content {
+    padding: 16px;
+  }
+}

@@ -1,3 +1,4 @@
+import RouteWrapper from '../../components/RouteWrapper/RouteWrapper';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import Button from '../../components/Buttons/Button';
@@ -14,6 +15,7 @@ const UserPage = () => {
   };
 
   return (
+    <RouteWrapper>
     <div className={styles.userPage}>
       <div className={styles.container}>
         <h1 className={styles.title}>User Dashboard</h1>
@@ -25,6 +27,7 @@ const UserPage = () => {
         </Button>
       </div>
     </div>
+    </RouteWrapper>
   );
 };
 
