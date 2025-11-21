@@ -27,8 +27,9 @@ const Navbar = () => {
       <div className={styles.links}>
         <Link to="/user/orders">My Orders</Link>
         <Link to="/admin/users">View Users</Link>
-        <Link to="/admin/products">Create Products</Link>
         <Link to="/user/products">Create Orders</Link>
+         <Link to="/user/products">Products</Link>
+        
         
       </div>
 

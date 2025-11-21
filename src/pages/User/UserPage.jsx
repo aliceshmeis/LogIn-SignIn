@@ -18,12 +18,9 @@ const UserPage = () => {
     <RouteWrapper>
     <div className={styles.userPage}>
       <div className={styles.container}>
-        <h1 className={styles.title}>User Dashboard</h1>
-        <p className={styles.welcome}>Welcome, {user?.username}!</p>
+       
         
-        <Button onClick={handleLogout} >
-          Logout
-        </Button>
+       
       </div>
     </div>
     </RouteWrapper>

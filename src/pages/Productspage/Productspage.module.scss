@@ -1,0 +1,12 @@
+// Import theme variables
+@import '../../styles/theme.scss';
+
+.productsPage {
+  min-height: 100vh;
+  background: #f8fafc; // Light gray background instead of dark navy
+
+  .productCard {
+    border-radius: $theme-radius-lg;
+    overflow: hidden;
+  }
+}

@@ -4,9 +4,10 @@ import LoginPage from './pages/Login/LoginPage';
 import SignUpPage from './pages/SignUp/SignUpPage';
 import AdminPage from './pages/Admin/AdminPage';
 import UserPage from './pages/User/UserPage';
+import ProductsPage from './pages/Productspage/Productspage'; // ← ADD THIS
 import ProtectedRoute from './components/ProtectedRoute';
 import './styles/globals.scss';
-import Layout from './components/Layout/Layout'; // Import Layout
+import Layout from './components/Layout/Layout';
 
 function App() {
   return (
@@ -32,9 +33,17 @@ function App() {
           path="/user" 
           element={
             <ProtectedRoute>
-              
               <UserPage />
-            
+            </ProtectedRoute>
+          } 
+        />
+
+      
+        <Route 
+          path="/user/products" 
+          element={
+            <ProtectedRoute>
+              <ProductsPage />
             </ProtectedRoute>
           } 
         />
